@@ -80,7 +80,7 @@ export async function deployCubes(): Promise<Cubes> {
 
   const contractFactory = await ethers.getContractFactory('Cubes');
   const args = [
-    'ipfs://QmZR4H3x8cnfZaoh6e2PYDXGnv8MRbc2ggL5DXM8oKGPJG/hypercube/collection.json',
+    `${C.BASE_URI}/hypercube/collection.json`,
     100n,
     (await ethers.getSigners())[0].address,
     300,
@@ -112,7 +112,7 @@ export async function deployCores(): Promise<Core> {
 
   const contractFactory = await ethers.getContractFactory('Core');
   const args = [
-    'ipfs://QmZR4H3x8cnfZaoh6e2PYDXGnv8MRbc2ggL5DXM8oKGPJG/items/collection.json',
+    `${C.BASE_URI}/items/collection.json`,
     100n,
     (await ethers.getSigners())[0].address,
     300,

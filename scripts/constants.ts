@@ -1,4 +1,5 @@
-const BASE_URI = 'https://rmrk.myfilebase.com/ipfs/QmUEEhZy4WZiqAukZEDrgz27sDZPv8wBDPJYys5ZExqEGx';
+export const BASE_URI =
+  'https://rmrk.myfilebase.com/ipfs/QmUEEhZy4WZiqAukZEDrgz27sDZPv8wBDPJYys5ZExqEGx';
 
 export const CATALOG_METADATA = `${BASE_URI}/catalog/metadata.json`;
 export const CATALOG_TYPE = `model/gltf-binary`;
