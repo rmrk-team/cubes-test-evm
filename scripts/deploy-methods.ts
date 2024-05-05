@@ -1,4 +1,4 @@
-import { ethers, run } from 'hardhat';
+import { ethers, run, network } from 'hardhat';
 import { delay, isHardhatNetwork } from './utils';
 import {
   RMRKBulkWriter,
@@ -7,7 +7,137 @@ import {
   RMRKCollectionUtils,
   RMRKEquipRenderUtils,
   RMRKRoyaltiesSplitter,
+  Core,
+  Cubes,
 } from '../typechain-types';
+import { getRegistry } from './get-gegistry';
+import * as C from './constants';
+
+export async function addAssets(
+  cubes: Cubes,
+  cores: Core,
+  catalog: RMRKCatalogImpl,
+): Promise<void> {
+  console.log('Adding assets to Cubes...');
+
+  let tx = await cubes.addEquippableAssetEntry(
+    0n,
+    await catalog.getAddress(),
+    C.CUBE_ASSET_METADATA_URI,
+    [C.SLOT_FOR_CORE_ID, C.FIXED_PART_CUBE_ID],
+  );
+  await tx.wait();
+
+  for (let i = 0; i < C.ALL_CORE_ASSET_METADATA_URIS.length; i++) {
+    let tx = await cores.addEquippableAssetEntry(
+      C.CORE_EQUIPPABLE_GROUP_ID,
+      ethers.ZeroAddress,
+      C.ALL_CORE_ASSET_METADATA_URIS[i],
+      [],
+    );
+    await tx.wait();
+  }
+
+  tx = await cores.setValidParentForEquippableGroup(
+    C.CORE_EQUIPPABLE_GROUP_ID,
+    await cubes.getAddress(),
+    C.SLOT_FOR_CORE_ID,
+  );
+  await tx.wait();
+}
+
+export async function configureCatalog(
+  catalog: RMRKCatalogImpl,
+  coresAddress: string,
+): Promise<void> {
+  console.log('Configuring Catalog...');
+
+  let tx = await catalog.addPart({
+    partId: C.FIXED_PART_CUBE_ID,
+    part: {
+      itemType: C.PART_TYPE_FIXED,
+      z: C.Z_INDEX_FOR_CUBE,
+      equippable: [],
+      metadataURI: C.FIXED_PART_CUBE_METADATA,
+    },
+  });
+  await tx.wait();
+  tx = await catalog.addPart({
+    partId: C.SLOT_FOR_CORE_ID,
+    part: {
+      itemType: C.PART_TYPE_SLOT,
+      z: C.Z_INDEX_FOR_CORE,
+      equippable: [coresAddress],
+      metadataURI: C.SLOT_FOR_CORE_METADATA,
+    },
+  });
+  await tx.wait();
+  console.log('Catalog configured');
+}
+
+export async function deployCubes(): Promise<Cubes> {
+  console.log(`Deploying Cubes to ${network.name} blockchain...`);
+
+  const contractFactory = await ethers.getContractFactory('Cubes');
+  const args = [
+    'ipfs://QmZR4H3x8cnfZaoh6e2PYDXGnv8MRbc2ggL5DXM8oKGPJG/hypercube/collection.json',
+    100n,
+    (await ethers.getSigners())[0].address,
+    300,
+  ] as const;
+  const contract: Cubes = await contractFactory.deploy(...args);
+  await contract.waitForDeployment();
+  const contractAddress = await contract.getAddress();
+  console.log(`Cubes deployed to ${contractAddress}`);
+
+  if (!isHardhatNetwork()) {
+    console.log('Waiting 10 seconds before verifying contract...');
+    await delay(10000);
+    await run('verify:verify', {
+      address: contractAddress,
+      constructorArguments: args,
+      contract: 'contracts/Cubes.sol:Cubes',
+    });
+
+    // Only do on testing, or if whitelisted for production
+    const registry = await getRegistry();
+    await registry.addExternalCollection(contractAddress, args[0]);
+    console.log('Collection added to Singular Registry');
+  }
+  return contract;
+}
+
+export async function deployCores(): Promise<Core> {
+  console.log(`Deploying Core to ${network.name} blockchain...`);
+
+  const contractFactory = await ethers.getContractFactory('Core');
+  const args = [
+    'ipfs://QmZR4H3x8cnfZaoh6e2PYDXGnv8MRbc2ggL5DXM8oKGPJG/items/collection.json',
+    100n,
+    (await ethers.getSigners())[0].address,
+    300,
+  ] as const;
+  const contract: Core = await contractFactory.deploy(...args);
+  await contract.waitForDeployment();
+  const contractAddress = await contract.getAddress();
+  console.log(`Core deployed to ${contractAddress}`);
+
+  if (!isHardhatNetwork()) {
+    console.log('Waiting 10 seconds before verifying contract...');
+    await delay(10000);
+    await run('verify:verify', {
+      address: contractAddress,
+      constructorArguments: args,
+      contract: 'contracts/Core.sol:Core',
+    });
+
+    // Only do on testing, or if whitelisted for production
+    const registry = await getRegistry();
+    await registry.addExternalCollection(contractAddress, args[0]);
+    console.log('Collection added to Singular Registry');
+  }
+  return contract;
+}
 
 export async function deployBulkWriter(): Promise<RMRKBulkWriter> {
   const bulkWriterFactory = await ethers.getContractFactory('RMRKBulkWriter');
