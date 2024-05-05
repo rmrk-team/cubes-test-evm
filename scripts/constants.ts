@@ -31,7 +31,7 @@ export const ALL_CORE_ASSET_METADATA_URIS = [
 
 export const PART_TYPE_SLOT = 1n;
 export const PART_TYPE_FIXED = 2n;
-export const CORE_EQUIPPABLE_GROUP_ID = PART_TYPE_SLOT;
+export const CORE_EQUIPPABLE_GROUP_ID = SLOT_FOR_CORE_ID;
 
 export const Z_INDEX_FOR_CUBE = 0n;
 export const Z_INDEX_FOR_CORE = 1n;
