@@ -1,0 +1,32 @@
+{
+  "name": "Hypercube 3D",
+  "description": "Hypercube 3D Test",
+  "externalUri": "",
+  "external_url": "",
+  "image": "ipfs://QmTvKZ6nNjB9RoyvvEm1N9whHehSTneGq75RhNQ5AMrQ7w/hypercube_parent.png",
+  "mediaUri": "ipfs://QmWHfjuK256s9hyTzjbVH6BvkTBP1AAwnAJANJkhzNKW8y/main_obj.glb",
+  "animation_url": "ipfs://QmWHfjuK256s9hyTzjbVH6BvkTBP1AAwnAJANJkhzNKW8y/main_obj.glb",
+  "thumbnailUri": "ipfs://QmTvKZ6nNjB9RoyvvEm1N9whHehSTneGq75RhNQ5AMrQ7w/hypercube_parent.png",
+  "attributes": [
+    {
+      "label": "Environment",
+      "type": "string",
+      "value": "night"
+    },
+    {
+      "label": "backgroundIntensity",
+      "type": "float",
+      "value": 0.5
+    },
+    {
+      "label": "VignetteDarkness",
+      "type": "float",
+      "value": 0.5
+    },
+    {
+      "label": "BloomIntensity",
+      "type": "float",
+      "value": 0.5
+    }    
+  ]
+}

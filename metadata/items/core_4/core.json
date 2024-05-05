@@ -1,0 +1,32 @@
+{
+  "name": "Core 4",
+  "description": "Core 4",
+  "externalUri": "",
+  "external_url": "",
+  "image": "ipfs://QmTvKZ6nNjB9RoyvvEm1N9whHehSTneGq75RhNQ5AMrQ7w/core_4.png",
+  "mediaUri": "ipfs://QmTvKZ6nNjB9RoyvvEm1N9whHehSTneGq75RhNQ5AMrQ7w/center_obj_4.glb",
+  "animation_url": "ipfs://QmTvKZ6nNjB9RoyvvEm1N9whHehSTneGq75RhNQ5AMrQ7w/center_obj_4.glb",
+  "thumbnailUri": "ipfs://QmTvKZ6nNjB9RoyvvEm1N9whHehSTneGq75RhNQ5AMrQ7w/core_4.png",
+  "attributes": [
+    {
+      "label": "Environment",
+      "type": "string",
+      "value": "night"
+    },
+    {
+      "label": "backgroundIntensity",
+      "type": "float",
+      "value": 0.1
+    },
+    {
+      "label": "VignetteDarkness",
+      "type": "float",
+      "value": 0.5
+    },
+    {
+      "label": "BloomIntensity",
+      "type": "float",
+      "value": 0.7
+    }    
+  ]   
+}
